@@ -1,0 +1,20 @@
+# WordPress / local configuration
+wp-config.php
+.env
+.env.*
+
+# Database dumps and backups — may contain applicant PII
+*.sql
+!install.sql
+*-backup*
+*.bak
+
+# Local previews and logs
+*.log
+*-preview.html
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
