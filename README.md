@@ -45,19 +45,22 @@ argon-friendlink/
 
 ## 安装
 
-1. 将本目录放入 `wp-content/plugins/argon-friendlink/`。
-2. 在 WordPress 后台启用「Argon Friendlink 管理插件」。
-3. 插件启用时会自动创建数据表（自动使用当前 WordPress 表前缀），一般无需手动操作。如果数据库账号权限受限，可执行 [`install.sql`](install.sql) 作为备用方案。
-4. 新建一个页面，在正文中加入短代码：
+### 从 GitHub Releases 安装
+
+1. 打开 [GitHub Releases](https://github.com/Timozaici/argon-friendlink/releases/latest)，下载最新的 `argon-friendlink-*.zip`（当前为 `argon-friendlink-1.4.zip`）。
+2. 登录 WordPress 后台，进入 **插件 → 安装插件 → 上传插件**。
+3. 选择刚下载的 zip 文件，点击“现在安装”。直接上传 zip 即可，无需解压。
+4. 安装完成后点击“启用插件”。插件启用时会自动创建数据表，自动使用当前 WordPress 表前缀。
+5. 新建一个页面，在正文中加入短代码：
 
    ```text
    [friendlink_apply]
    ```
 
-   当前站点使用 Argon 主题的页面模板 `template-parts/content-page-friendlink.php` 获得原生页面布局。该模板属于主题集成文件，不在本插件内；如果不需要 Argon 原生布局，普通页面 + 短代码也可使用。
-5. 后台左侧会出现「友链审核」菜单。
+   如果需要 Argon 原生页面布局，可为该页面使用主题中的 `template-parts/content-page-friendlink.php` 模板；该模板属于主题集成文件，不在插件 zip 内。普通页面 + 短代码也可使用。
+6. 后台左侧会出现「友链审核」菜单。
 
-> 插件启用时会自动建表；已有旧表会在后台初始化时自动升级 `status` 枚举并新增 `wp_link_id` 字段。如果数据库账号没有 `CREATE` / `ALTER` 权限，请手动执行 `install.sql` 中的建表语句后自行迁移。
+> 如果数据库账号没有 `CREATE` / `ALTER` 权限，自动建表或升级可能失败。此时可执行 [`install.sql`](install.sql) 手动创建/迁移。
 
 ## 数据表
 
