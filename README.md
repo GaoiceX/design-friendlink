@@ -1,68 +1,56 @@
-# Argon Friendlink 管理插件
+# Gaoice / Argon Friendlink 友链自助申请与审核插件 (v2.0)
 
-WordPress 友情链接自助申请与审核插件。前端表单复用 [Argon](https://github.com/solstice23/argon-theme) 主题的原生页面与组件样式，后台提供审核、下架、重新上架与邮件通知。
+专为 **Gaoice Field Notes** 主题设计语言打造（同时向下兼容 Argon 主题）的 WordPress 友情链接自助申请与后台审核插件。
 
-本插件仅确保在 [Argon](https://github.com/solstice23/argon-theme) 主题中可以正常使用
+前台通过 `[friendlink_apply]` 短代码渲染带有 **「友人帐名片实时预览（Live Card Preview）」** 的硬朗切角申请表单；后台提供与主题设置中心同风格的可视化审核面板、4 大状态统计矩阵、通过/拒绝、下架/重新上架以及天穹刀锋风格 HTML 邮件通知。
 
-**作者：** [Timozaici](https://github.com/timozaici)
+**作者：** [Timozaici](https://github.com/timozaici) & [Gaoice](https://blog.gaoice.run)
 
-> **版本说明**
->
-> `1.0` – `1.3` 为内部开发版本，**从未公开发布**。
-> 当前 `1.4` 是首个公开发布版本。
+---
 
-## 功能
+## 核心特性 (v2.0 升级)
 
-- 前台友链自助提交，表单视觉与 Argon 主题原生页面保持一致
-- 后台审核列表：待审核、已审核通过、已拒绝、已下架
-- 待审核申请可通过 / 拒绝
-- 已通过友链可下架；下架时同步 `wp_links.link_visible = N`
-- 已下架友链可重新上架；上架时同步 `wp_links.link_visible = Y`
-- 已拒绝友链不提供任何操作入口
-- 新申请邮件通知管理员
-- 审核通过邮件发送给申请人（Argon 风格，PC / 手机端自适应）
-- 数据库结构自动升级：`status` 增加 `offline`、新增 `wp_link_id`、回填历史映射
-- 启用时自动创建数据表，自动使用当前 WordPress 表前缀
-- 后台可选择审核通过邮件按钮跳转的已发布页面
+- **Gaoice Field Notes 切角视觉语言**：前台表单全面采用 45° 多边形硬朗切角（`.gfl-f-cut`，并自动跟随主题切换圆角/直角与日间/夜间/纯黑 OLED 模式），无任何第三方图标库依赖
+- **友人帐名片实时预览**：访客在填写「网站名称、网站地址、网站图标、网站简介」时，上方实时同步渲染出收录至本站「友人帐」后的真实切角名片效果（头像加载失败自动回退为首字徽章）
+- **可视化后台审核中心**：
+  - 顶部天穹英雄栏 + 4 大状态统计卡片（`⏳ 待审核` / `✓ 已通过` / `⬇ 已下架` / `✕ 已拒绝`）
+  - 审核列表自带申请站点切角头像预览（裂图自动降级为首字徽章）
+  - 待审核申请可通过 / 拒绝；已通过友链可一键下架（同步 `wp_links.link_visible = N`）；已下架友链可重新上架（同步 `wp_links.link_visible = Y`）
+- **天穹风格响应式 HTML 邮件**：
+  - 新申请提交后自动发送深空蓝切角风格通知邮件至管理员邮箱
+  - 审核通过后自动向申请人发送「友人帐收录通知」HTML 邮件（PC / 手机端自适应），按钮自动指向主题「友人帐」页面（或后台指定的任意已发布页面）
+- **零配置自动建表与平滑升级**：启用时自动创建 `{prefix}friendlink_applications` 数据表，自动升级 `offline` 状态与 `wp_link_id` 映射字段
 
-## 环境要求
-
-- WordPress 5.5+
-- PHP 7.4+
-- Argon 主题（前端样式与页面布局依赖其原生组件；其他主题下表单仍可用，但外观不保证一致）
-- MySQL / MariaDB，支持 `utf8mb4`
+---
 
 ## 目录结构
 
 ```text
-argon-friendlink/
-├── argon-friendlink.php   # 插件主文件
-├── install.sql            # 数据表安装 SQL
+design-friendlink/
+├── argon-friendlink.php   # 插件主文件（含前台短代码、后台审核中心与邮件模板）
+├── install.sql            # 数据表安装 SQL（供无 CREATE 权限环境手动执行）
 ├── LICENSE                # GPL-3.0 许可证
 ├── README.md
 └── .gitignore
 ```
 
-## 安装
+---
 
-### 从 GitHub Releases 安装
+## 安装与使用
 
-1. 打开 [GitHub Releases](https://github.com/Timozaici/argon-friendlink/releases/latest)，下载最新的 `argon-friendlink-*.zip`（当前为 `argon-friendlink-1.4.zip`）。
-2. 登录 WordPress 后台，进入 **插件 → 安装插件 → 上传插件**。
-3. 选择刚下载的 zip 文件，点击“现在安装”。直接上传 zip 即可，无需解压。
-4. 安装完成后点击“启用插件”。插件启用时会自动创建数据表，自动使用当前 WordPress 表前缀。
-5. 新建一个页面，在正文中加入短代码：
+1. 可直接将打包好的 `argon-friendlink.zip` 在 WordPress 后台 **插件 → 安装插件 → 上传插件** 中上传并启用，或将本目录上传至 `wp-content/plugins/argon-friendlink/`。
+2. 新建或编辑友链申请页面（例如别名为 `/friend/`、标题为 `添加友链` 的页面），在正文中放入短代码：
 
    ```text
    [friendlink_apply]
    ```
 
-   如果需要 Argon 原生页面布局，可为该页面使用主题中的 `template-parts/content-page-friendlink.php` 模板；该模板属于主题集成文件，不在插件 zip 内。普通页面 + 短代码也可使用。
-6. 后台左侧会出现「友链审核」菜单。
+3. 在 **Gaoice Field Notes** 主题下，`/friend/` 或包含 `[friendlink_apply]` 的页面会自动使用标准切角面板布局渲染，与 `/link/`（友人帐展示页）完美联动。
+4. 在 WordPress 后台左侧点击 **「友链审核」** 即可进入可视化审核中心。
 
-> 如果数据库账号没有 `CREATE` / `ALTER` 权限，自动建表或升级可能失败。此时可执行 [`install.sql`](install.sql) 手动创建/迁移。
+---
 
-## 数据表
+## 数据表结构
 
 表名：`{prefix}friendlink_applications`
 
@@ -88,86 +76,19 @@ CREATE TABLE IF NOT EXISTS `wp_friendlink_applications` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci COMMENT='友情链接审核表';
 ```
 
-字段说明：
+---
 
-- `status`：`pending`（待审核）、`approved`（已通过）、`rejected`（已拒绝）、`offline`（已下架）
-- `wp_link_id`：对应 `wp_links.link_id`，用于下架 / 上架时精确同步链接可见性
-- `link_visible`：申请记录中的可见性副本；公开页面实际以 `wp_links.link_visible` 为准
-
-## 使用说明
-
-### 前台提交
-
-- 网站名称、网站简介按设计原样入库，不做内容合规检查
-- 网站地址缺少协议时自动补全 `https://`，仅校验域名后缀；允许域名后带路径
-- 网站图标为必填项，必须是有效的 http(s) 图片地址
-- 联系邮箱仅校验格式
-- 提交成功后进入「待审核申请」
-
-### 后台审核
+## 审核状态流转说明
 
 | 当前状态 | 可用操作 | 结果 |
 |---|---|---|
-| `pending` | 通过 / 拒绝 | `approved` / `rejected` |
-| `approved` | 下架 | `offline`，同时 `wp_links.link_visible = N` |
-| `offline` | 重新上架 | `approved`，同时 `wp_links.link_visible = Y` |
+| `pending` | 通过 / 拒绝 | `approved`（写入 `wp_links` 并发送通过邮件） / `rejected` |
+| `approved` | 下架 | `offline`，同时同步 `wp_links.link_visible = N` |
+| `offline` | 重新上架 | `approved`，同时同步 `wp_links.link_visible = Y` |
 | `rejected` | 无 | 保持不变 |
 
-- 只有 `approved` 可以下架，`pending` 和 `rejected` 即使伪造请求也会被跳过
-- 只有 `offline` 可以重新上架
-- 拒绝操作只对 `pending` 生效
-- 后台操作带 nonce 校验，并要求 `manage_options` 权限
-
-### 邮件跳转页面
-
-在「友链审核」页面顶部的“邮件跳转页面”下拉框中选择任意已发布页面并保存。审核通过邮件中的“前往查看友情链接”按钮会跳转到该页面；不选择时使用默认地址 `/link.html`。
-
-## 邮件说明
-
-- **新申请通知**：每次前台提交后发送到 WordPress「管理员邮箱」，主题为“新友情链接申请待审核”
-- **审核通过邮件**：后台点“通过”后发送给申请人，使用独立的 Argon 风格 HTML 模板，适配 PC 与手机
-- **拒绝邮件**：当前版本不发送
-- 审核通过邮件中的按钮指向后台选择的“邮件跳转页面”；未选择时默认 `/link.html`
-- 邮件中的站点名称、申请人名称、URL 均已转义
-
-## 安全说明
-
-- 网站名称、网站简介按原样入库。插件自身的后台列表、前台表单回填、邮件模板均做了输出转义；第三方主题或插件直接读取 `wp_links` 时，需要自行转义。
-- 网站图标地址会拒绝引号、尖括号、空白和控制字符；公开友链页输出图标时使用 `esc_url()`。
-- 后台操作使用 nonce + `manage_options` 权限检查；前台表单使用 nonce，但**匿名 nonce 不构成反垃圾措施**。
-- 生产环境建议额外增加：IP / 邮箱频率限制、验证码或蜜罐、重复 URL / 邮箱去重、管理员通知邮件节流。
-- 插件会存储申请人邮箱、网站 URL 与备注；部署时请根据当地隐私法规设置数据保留与删除策略。
-- 请勿将 `wp-config.php`、数据库导出、备份文件或包含真实申请人信息的日志提交到公开仓库。
-
-## 已知限制
-
-- 后台列表没有分页
-- 没有内置频率限制或验证码
-- 拒绝申请不发送邮件
-- 审核通过邮件按钮默认指向 `/link.html`，可在后台选择其他页面
-- 前端 UI 依赖 Argon 主题样式
-- 自动建表 / 升级需要数据库 `CREATE` / `ALTER` 权限；权限不足时请手动执行 `install.sql`
-
-## 版本与变更
-
-- `1.0` – `1.3`：内部开发版本，**从未公开发布**
-- `1.4`：首个公开发布版本
-  - 前台提交页面按 Argon 原生页面实现
-  - 明确字段校验与入库规则
-  - 审核通过邮件为 Argon 风格并适配移动端
-  - 新增已通过友链下架 / 重新上架，并同步 WordPress 链接可见性
-  - 新增 `wp_link_id` 映射与历史数据回填
-  - 启用时自动创建数据表，自动适配当前 WordPress 表前缀
-  - 后台可选择审核通过邮件按钮跳转的页面
-  - 安全加固：图标 URL 注入防护、公开页图标输出转义、后台权限与 nonce、模板 `ABSPATH` 保护
+---
 
 ## 许可证
 
-本项目使用的可证：**GNU General Public License v3.0**。
-
-完整许可证文本见 [LICENSE](LICENSE)，许可证说明见 <https://www.gnu.org/licenses/gpl-3.0.html>。
-
-## 致谢
-
-- [Argon 主题](https://github.com/solstice23/argon-theme) — solstice23
-- 作者 — [Timozaici](https://github.com/timozaici)
+本项目基于 **GNU General Public License v3.0** 开源，详见 [LICENSE](LICENSE)。
